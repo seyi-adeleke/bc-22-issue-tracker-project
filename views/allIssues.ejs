@@ -1,0 +1,28 @@
+<% include partials/header %>
+		<h1> <%= title %></h1>
+		<table>
+			<tr>
+				<td>Description</td>
+				<td>Priority</td>
+				<td>Department</td>
+				<td>Status</td>
+			</tr>
+			<% issues.forEach(function(issue){ %>
+				<tr>
+					<td> <%= issue.description %> </td>
+					<td> <%= issue.priority %> </td>
+					<td> <%= issue.department %> </td>
+					<td> <%= issue.status %>  </td>
+					<td> <a href="#" class="deleteUser" data-id="<%= issue._id %>">Delete</a> </td>
+				</tr>					
+			<% }) %>
+		</table>
+		
+	</div>
+	<div>
+		<h1><a href="/#"> Assign Issues To Department Head </a></h1>
+	</div>
+	<div>
+		<h1><a href="/#"> Update issues </a></h1>
+	</div>
+<% include partials/footer %>

@@ -1,0 +1,24 @@
+<% include partials/header %>
+	<div>
+		<h1> <%= title %></h1>
+		<% if ((errors) && (typeof(errors) === "object")){ %>
+			<ul>
+				<% errors.forEach(function(error){ %>
+					<li><%= error.msg %></li>
+				<% }) %>
+			</ul>
+		<% } %>
+		<% if ((errors) && (typeof(errors) === "string")){ %>
+			<ul>
+				<li><%= errors %></li>
+			</ul>
+		<% } %>
+		<form method="POST" action="/users/signIn">
+			<label>Email</label><br>
+			<input type="email" name="email"><br>
+			<label>Password</label><br>
+			<input type="password" name="password"><br><br>
+			<input type="submit" value="SignIn">
+		</form>
+	</div>
+<% include partials/footer %>

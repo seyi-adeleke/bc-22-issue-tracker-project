@@ -1,0 +1,40 @@
+<% include partials/header %>
+	<div>
+		<h1> <%= title %></h1>
+		<% if ((errors) && (typeof(errors) === "object")){ %>
+			<ul>
+				<% errors.forEach(function(error){ %>
+					<li><%= error.msg %></li>
+				<% }) %>
+			</ul>
+		<% } %>
+		<% if ((errors) && (typeof(errors) === "string")){ %>
+			<ul>
+				<li><%= errors %></li>
+			</ul>
+		<% } %>
+		<form method="POST" action="/users/issues">
+			<label>Issue description</label><br>
+			<textarea name="description" rows="10" cols="50" placeholder="Write something here"></textarea><br>
+			<label>Priority</label><br>
+	        <select id ="priority" name="priority">
+	        	<option value="">Priority</option>
+	            <option value = 'high'>High</option>
+	        	<option value = 'medium'>Medium</option>
+	        	<option value = 'low'>Low</option>
+	        </select><br>
+	        <label>Department</label><br>
+	        <select id ="department" name="department">
+	        	<option value="">Department</option>
+	            <option value = 'operations'>Operations</option>
+	        	<option value = 'finance'>Finance</option>
+	        	<option value = 'training'>Training</option>
+	        	<option value = 'recruitment'>Recruitment</option>
+	        	<option value = 'success'>Success</option>
+	        	<option value = 'sales'>Sales</option>
+	        	<option value = 'marketing'>Marketing</option>
+	        </select><br><br>
+			<input type="submit" value="Raise Issue">
+		</form>
+	</div>
+<% include partials/footer %>
