@@ -259,6 +259,6 @@ app.post('/update/:id',function(req, res){
 	});
 });*/
 
-app.listen(8000, function(){
-	console.log('server Started on Port 8000...');
+app.listen(80, function(){
+	console.log('server Started on Port 80...');
 })
