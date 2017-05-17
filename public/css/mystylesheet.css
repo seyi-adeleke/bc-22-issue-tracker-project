@@ -1,0 +1,124 @@
+.top{
+	height:100px; width:100%;
+	text-align:center;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	margin-top:5px;
+	font-size:15px;
+	font-family:Verdana;
+	background-color:black;
+}
+	
+.top img{
+	float:left;
+	margin-left:350px;
+	overflow:hidden;
+}
+
+body{
+	background-image:url('image/bgpic.jpg')
+}
+		
+#container{
+	width:850px;
+	height:900px;
+	margin:auto;
+	padding:auto;
+	background-color: rgba(255, 255, 255, 0.5);/*for the white transparent background-color*/
+}
+
+	
+#menubar tr {
+	margin: 0;
+	display: inline-block;
+	padding: 0;
+	overflow: hidden;
+	margin: auto;
+	float:left;
+}
+
+#menubar td a {
+	color: white;
+	text-align: center;
+	padding: 20px;
+	text-decoration: none;
+}
+
+#menubar td a:hover {
+    color: orange;
+}
+
+#frmid{
+	margin-left:30px;
+	
+}
+
+.enter{
+	width:400px;
+	height:35px;
+	border-color:black;
+	background-color:black;
+	color:white;
+	border-radius:5px;
+	font-size:15px;
+}
+	
+#msg{width:400px;
+	height:120px;
+	border-color:black;
+	background-color:black;
+	color:white;
+	border-radius:5px;
+	font-size:15px;
+}
+
+#to{
+	border-color:black;
+	background-color:black;
+	color:white;
+	border-radius:5px;
+	font-size:15px;
+	margin-left:350px;
+}
+#case{
+	background-color: white;
+	height:700px; 
+	width:900px; 
+	margin-left: 300px;
+}
+
+#case2{
+	background-color: white;
+	height:450px; 
+	width:900px; 
+	margin-left: 300px;
+}
+
+#case3{
+	background-color: white;
+	height:700px; 
+	width:900px; 
+	margin-left: 300px;
+}
+
+
+#footer{
+	background-color:black;
+	height:100px; width:100%; 
+	text-align:center;
+	color:white;
+}
+
+.modal-body .form-horizontal .col-sm-2,
+.modal-body .form-horizontal .col-sm-10 {
+    width: 100%
+}
+
+.modal-body .form-horizontal .control-label {
+    text-align: left;
+}
+.modal-body .form-horizontal .col-sm-offset-2 {
+    margin-left: 15px;
+}
+	
+		

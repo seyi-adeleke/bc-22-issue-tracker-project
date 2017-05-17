@@ -1,5 +1,5 @@
 <% include partials/header %>
-	<div>
+	<div id="case">
 		<h1> <%= title %></h1>
 		<% if ((errors) && (typeof(errors) === "object")){ %>
 			<ul>
@@ -14,16 +14,28 @@
 			</ul>
 		<% } %>
 
-		<form method="post" action="/users/signUp">
-			<label>First Name</label><br>
-			<input type="text" name="firstName"><br>
-			<label>Last Name</label><br>
-			<input type="text" name="lastName"><br>
-			<label>Email</label><br>
-			<input type="email" name="email"><br>
-			<label>Password</label><br>
-			<input type="password" name="password"><br><br>
-			<input type="submit" value="Submit">
-		</form>
+		<form method="post" action="/signUp">
+		  <div class="form-group">
+		    <label for="firstName">First Name:</label>
+		    <input type="text" class="form-control" name="firstName">
+		  </div>
+		  <div class="form-group">
+		    <label for="lastName">Last Name:</label>
+		    <input type="text" class="form-control" name="lastName">
+		  </div>
+		  <div class="form-group">
+		    <label for="email">Email address:</label>
+		    <input type="email" class="form-control" name="email">
+		  </div>
+		  <div class="form-group">
+		    <label for="password">Password:</label>
+		    <input type="password" class="form-control" name="password">
+		  </div>
+		  <div class="form-group">
+		    <label for="password2">Retype Password:</label>
+		    <input type="password" class="form-control" name="password2">
+		  </div>
+		  <button type="submit" class="btn btn-primary">Submit</button>
+		</form> 
 	</div>
 <% include partials/footer %>

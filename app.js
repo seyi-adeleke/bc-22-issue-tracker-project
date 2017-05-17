@@ -3,6 +3,8 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var expressValidator = require('express-validator');
 var mongojs = require('mongojs');
+//var db = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['users']);
+//var db2 = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['issues']);
 var db = mongojs('issuesTracker', ['users']);
 var db2 = mongojs('issuesTracker', ['issues']);
 var ObjectId = mongojs.ObjectId;
@@ -58,7 +60,7 @@ app.get('/', function(req, res){
 		// docs is an array of all the documents in mycollection
 		//console.log(docs);
 		res.render('index', {
-			title: 'Customers',
+			title: 'Issues Tracker',
 			users: docs
 		});
 	})
@@ -75,30 +77,53 @@ app.get('/signIn', function(req, res){
 });
 app.get('/issues', function(req, res){
 		res.render('issues', {
-			title: 'Raise Issue'
+			title: 'Raise Issue',
+			user: '',
+			admin: ''
 		});
 });
 app.get('/admin', function(req, res){
 		res.render('admin', {
-			title: 'Admin Page'
+			title: 'Admin Page',
+			user: ''
 		});
 });
+app.get('/head', function(req, res){
+		res.render('head', {
+			title: 'Head Of Department Page'
+		});
+});
+
 app.get('/allIssues', function(req, res){
 		db2.issues.find(function (err, docs) {
 		// docs is an array of all the documents in mycollection
 		//console.log(docs);
 		res.render('allIssues', {
+			title: 'View Issues Pertaining to Your Department',
+			issues: docs
+		});
+	})
+});
+
+app.get('/deptIssues', function(req, res){
+		//db2.issues.find( { _id: 5 } )
+		db2.issues.find(function (err, docs) {
+		// docs is an array of all the documents in mycollection
+		//console.log(docs);
+		res.render('deptIssues', {
 			title: 'View All Issues',
 			issues: docs
 		});
 	})
 });
 	
-app.post('/users/signUp', function(req, res){
+app.post('/signUp', function(req, res){
 	req.checkBody('firstName', 'First name is Required').notEmpty();
 	req.checkBody('lastName', 'Last name is Required').notEmpty();
 	req.checkBody('email', 'Email is Required').notEmpty();
 	req.checkBody('password', 'Password is Required').notEmpty();
+	req.checkBody('password2', 'Retype Password is Required').notEmpty();
+	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
 	var errors = req.validationErrors();
 	if(errors){		
@@ -113,7 +138,7 @@ app.post('/users/signUp', function(req, res){
 			lastName: req.body.lastName,
 			email: req.body.email,
 			password: req.body.password,
-			admin: 1
+			admin: 0
 		}
 		//console.log('SUCCESS');
 		db.users.insert(newUser, function(err, result){
@@ -128,7 +153,7 @@ app.post('/users/signUp', function(req, res){
 	}	
 });
 
-app.post('/users/signIn', function(req, res){
+app.post('/signIn', function(req, res){
 	req.checkBody('email', 'Email is Required').notEmpty();
 	req.checkBody('password', 'Password is Required').notEmpty();
 
@@ -156,10 +181,12 @@ app.post('/users/signIn', function(req, res){
 			}else {
 				if(req.body.password == doc.password){
 					//console.log(req.body.password);
-					if (doc.admin == 0)
-		    			res.redirect('/issues');
-		    		else
-		    			res.redirect('/admin');
+					
+		    			res.render('issues', {
+						title: 'Raise Issues',
+						user: doc._id,
+						admin: doc.admin
+					});
 	    		}else{
 		    		res.render('signIn', {
 						title: 'Sign In',
@@ -172,22 +199,26 @@ app.post('/users/signIn', function(req, res){
 	}	
 });
 
-app.post('/users/issues', function(req, res){
+app.post('/issues', function(req, res){
 	req.checkBody('description', 'Description is Required').notEmpty();
 	req.checkBody('priority', 'Priority is Required').notEmpty();
 	req.checkBody('department', 'Department is Required').notEmpty();
+	req.checkBody('user', 'Yor are not logged in').notEmpty();
 
 	var errors = req.validationErrors();
 	if(errors){		
 		res.render('issues', {
 			title: 'issues',
-			errors: errors
+			errors: errors,
+			user: req.body.user,
+			admin: req.body.admin
 		});
 	}else {
 		var newIssue = {
 			description: req.body.description,
 			priority: req.body.priority,
 			department: req.body.department,
+			user: req.body.user,
 			status: "Open"
 		}
 		//console.log('SUCCESS');
@@ -199,21 +230,34 @@ app.post('/users/issues', function(req, res){
 			}
 			res.render('issues', {
 					title: 'issues',
-					errors: msg
+					errors: msg,
+					user: req.body.user,
+					admin: req.body.admin
 				});
 			//res.redirect('/issues');
 		});
 	}	
 });
 
-app.delete('/users/delete/:id',function(req, res){
-	db.users.remove({_id: ObjectId(req.params.id)}, function(err, result){
+app.post('/update/:id',function(req, res){
+	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'Closed'}}, function(err, result){
 		if(err){
 			console.log(err);
 		}
-		res.redirect('/');
+		//console.log('ok');
+		res.redirect('/allIssues');
 	});
 });
+
+/*app.post('/user/:id',function(req, res){
+	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'Closed'}}, function(err, result){
+		if(err){
+			console.log(err);
+		}
+		console.log('ok');
+		res.redirect('/allIssues');
+	});
+});*/
 
 app.listen(8000, function(){
 	console.log('server Started on Port 8000...');

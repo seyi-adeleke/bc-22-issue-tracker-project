@@ -1,10 +1,11 @@
 <% include partials/header %>
-		<h1> <%= title %></h1>
-	</div>
-	<div>
-		<h1><a href="/issues"> Raise issues </a></h1>
-	</div>
-	<div>
-		<h1><a href="/allIssues"> View Issues </a></h1>
+	<div id="case2">
+		<% if (user != ''){ %>		
+			<h1> <%= title %></h1>
+			<h2><a href="/issues"> Raise issues </a></h2>
+			<h2><a href="/allIssues"> View Issues </a></h2>
+		<% }else{ %>
+			<h1> You are not logged In!!! </h1>
+		<% } %>
 	</div>
 <% include partials/footer %>

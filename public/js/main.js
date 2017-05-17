@@ -1,18 +1,37 @@
 $(document).ready(function(){
-	$('.deleteUser').on('click', deleteUser);
+	$('.updateIssue').on('click', updateIssue);
 });
 
-function deleteUser(){
-	var confirmation = confirm('Are u sure?');
+function updateIssue(){
+	var confirmation = confirm('Are You sure you want to close the Issue?');
 	if (confirmation){
 		$.ajax({
-			type: 'DELETE',
-			url: '/users/delete/'+$(this).data('id')
+			type: 'POST',
+			url: '/update/'+$(this).data('id')
 		}).done(function(response){
-			window.location.replace('/');
+			window.location.replace('/allIssues');
 		});
-		window.location.replace('/');
+		window.location.replace('/allIssues');
 	} else {
 		return false;
 	}
 }
+
+/*$(document).ready(function(){
+	$('.user').on('click', user);
+});
+
+function user(){
+	//var confirmation = confirm('Are You sure you want to close the Issue?');
+	//if (confirmation){
+		$.ajax({
+			type: 'POST',
+			url: '/user/'+$(this).data('id')
+		}).done(function(response){
+			window.location.replace('/allIssues');
+		});
+		window.location.replace('/allIssues');
+	//} else {
+		return false;
+	//}
+}*/

@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "body-parser": "*",
+    "csurf": "^1.9.0",
     "ejs": "^2.5.6",
     "express": "*",
+    "express-session": "^1.15.2",
     "express-validator": "^3.2.0",
     "mongojs": "^2.4.0",
     "mongoose": "^4.9.9"

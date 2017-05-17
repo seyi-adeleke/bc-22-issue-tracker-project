@@ -1,5 +1,5 @@
 <% include partials/header %>
-	<div>
+	<div id="case2">
 		<h1> <%= title %></h1>
 		<% if ((errors) && (typeof(errors) === "object")){ %>
 			<ul>
@@ -13,12 +13,19 @@
 				<li><%= errors %></li>
 			</ul>
 		<% } %>
-		<form method="POST" action="/users/signIn">
-			<label>Email</label><br>
-			<input type="email" name="email"><br>
-			<label>Password</label><br>
-			<input type="password" name="password"><br><br>
-			<input type="submit" value="SignIn">
-		</form>
+		<form method="post" action="/signIn">
+		  <div class="form-group">
+		    <label for="email">Email address:</label>
+		    <input type="email" class="form-control" name="email">
+		  </div>
+		  <div class="form-group">
+		    <label for="password">Password:</label>
+		    <input type="password" class="form-control" name="password">
+		  </div>
+		  <div class="checkbox">
+		    <label><input type="checkbox"> Remember me</label>
+		  </div>
+		  <button type="submit" class="btn btn-primary">Submit</button>
+		</form> 
 	</div>
 <% include partials/footer %>
