@@ -1,0 +1,32 @@
+<% include partials/header2 %>
+	<div id="case">
+		<h1> <%= title %></h1>
+		<% if ((errors) && (typeof(errors) === "object")){ %>
+			<ul>
+				<% errors.forEach(function(error){ %>
+					<li><%= error.msg %></li>
+				<% }) %>
+			</ul>
+		<% } %>
+		<% if ((errors) && (typeof(errors) === "string")){ %>
+			<ul>
+				<li><%= errors %></li>
+			</ul>
+		<% } %>
+		<form method="post" action="/assignIssues">
+		  <div class="form-group">
+		    <label for="assignee">Person To Assign:</label>
+		    <select id ="assignee" name="assignee" class="form-control">
+	        	<option value="">Assign</option>
+	        	<option value = 'phabs@yahoo.com'>Phabs</option>
+	            <option value = 'ichat@y.com'>Ichat</option>
+	        	<option value = 'dammy@y.com'>Dammy</option>
+	        	<option value = 'victoria@y.com'>Victoria</option>
+	        </select><br>
+		  </div>
+		  <input type="hidden" value="<%= assignId %>" name="assignId">
+		  <button type="submit" class="btn btn-primary">Submit</button>
+		</form> 
+		<%= assignId %>
+	</div>
+<% include partials/footer %>

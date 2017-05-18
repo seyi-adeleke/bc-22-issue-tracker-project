@@ -9,29 +9,14 @@
 
 #case{
 	background-color: white;
-	height:700px; 
+	height:1000px; 
 	width:900px; 
 	margin-left: 300px;
 }
-
-#case2{
-	background-color: white;
-	height:520px; 
-	width:900px; 
-	margin-left: 300px;
-}
-
-#case3{
-	background-color: white;
-	height:700px; 
-	width:900px; 
-	margin-left: 300px;
-}
-
 
 #footer{
 	background-color:black;
-	height:100px; width:100%; 
+	width:100%; 
 	text-align:center;
 	color:white;
 }

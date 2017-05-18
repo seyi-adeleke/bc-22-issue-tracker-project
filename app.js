@@ -5,17 +5,18 @@ var expressValidator = require('express-validator');
 var mongojs = require('mongojs');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+require('dotenv').config();
 
-var db = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['users']);
-var db2 = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['issues']);
-//var db = mongojs('issuesTracker', ['users']);
-//var db2 = mongojs('issuesTracker', ['issues']);
+var db = mongojs(process.env.database, [process.env.collection1]);
+var db2 = mongojs(process.env.database, [process.env.collection2]);
+//var db = mongojs(process.env.database, [process.env.collection1]);
+//var db2 = mongojs(process.env.database, [process.env.collection2]);
 var ObjectId = mongojs.ObjectId;
 
 var app = express();
 
 app.use(cookieParser());
-app.use(session({secret: "Shh, its a secret!"}));
+app.use(session({secret: process.env.secretKey}));
 
 
 
@@ -75,10 +76,32 @@ app.get('/signUp', function(req, res){
 			title: 'SIGN UP'
 		});
 });
+
+app.get('/createHead', function(req, res){
+	if (req.session.user){
+		if (req.session.user.admin === 1){
+			db2.issues.find(function (err, docs) {
+			res.render('createhead', {
+				title: 'CREATE THE HEAD OF A DEPARTMENT',
+				issues: docs
+			});
+			})
+		}else{
+			res.redirect('/issues')	
+		}
+	}else{
+		res.redirect('/signIn')
+	}
+});
+
 app.get('/signIn', function(req, res){
+	if(req.session.user){
+		res.redirect('/issues');
+	}else{
 		res.render('signIn', {
 			title: 'Sign In'
 		});
+	}
 });
 app.get('/logout', function(req, res){
 		req.session.destroy();
@@ -96,6 +119,28 @@ app.get('/issues', function(req, res){
 	}
 
 });
+
+app.get('/assignIssues', function(req, res){
+	if (req.session.user){
+		if (req.session.user.admin == 2){
+			if (req.session.assignId){
+				console.log(req.session.assignId);
+				res.render('assignIssues', {
+					title: 'ASSIGN ISSUE TO SOMEONE',
+					assignId: req.session.assignId
+				});
+			}else{
+			res.redirect('/deptIssues')
+			}			
+		}else{
+			res.redirect('/issues')	
+		}
+	}else{
+		res.redirect('/signIn')
+	}
+});
+
+
 app.get('/deptIssues', function(req, res){
 	if (req.session.user){
 		if (req.session.user.admin == 2){
@@ -143,6 +188,19 @@ app.get('/myIssues', function(req, res){
 		res.redirect('/signIn')
 	}
 });
+
+app.get('/myAssignedIssues', function(req, res){
+	if (req.session.user){		
+		db2.issues.find({assign: req.session.user._id},function (err, docs) {
+		res.render('myAssignedIssues', {
+			title: 'MANAGE ISSUES ASSIGNED TO YOU',
+			issues: docs
+		});
+		})
+	}else{
+		res.redirect('/signIn')
+	}
+});
 	
 app.post('/signUp', function(req, res){
 	req.checkBody('firstName', 'First name is Required').notEmpty();
@@ -159,24 +217,76 @@ app.post('/signUp', function(req, res){
 			errors: errors
 		});
 	}else {
-		var newUser = {
-			_id: req.body.email,
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
-			email: req.body.email,
-			password: req.body.password,
-			admin: 0
-		}
+		
 		//console.log('SUCCESS');
-		db.users.insert(newUser, function(err, result){
-			if(err){
+		db.users.findOne({"_id": req.body.email},{ _id: 1, email: 1 }, function(err, doc) {
+			if (doc){
 				res.render('signUp', {
 					title: 'Sign Up',
 					errors: 'User Already Exists!!!'
 				});
+			}else{
+				var newUser = {
+					_id: req.body.email,
+					firstName: req.body.firstName,
+					lastName: req.body.lastName,
+					email: req.body.email,
+					password: req.body.password,
+					admin: 0
+				}
+				db.users.insert(newUser, function(err, result){
+				if(err){
+					console.log(err);
+				}
+				res.redirect('/signIn');
+				})
 			}
-			res.redirect('/signIn');
+		})
+	}	
+});
+
+app.post('/createHead', function(req, res){
+	req.checkBody('firstName', 'First name is Required').notEmpty();
+	req.checkBody('lastName', 'Last name is Required').notEmpty();
+	req.checkBody('email', 'Email is Required').notEmpty();
+	req.checkBody('password', 'Password is Required').notEmpty();
+	req.checkBody('password2', 'Retype Password is Required').notEmpty();
+	req.checkBody('department', 'Department is Required').notEmpty();
+	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+
+	var errors = req.validationErrors();
+	if(errors){		
+		res.render('createHead', {
+			title: 'CREATE HEAD OF A DEPARTMENT',
+			errors: errors
 		});
+	}else {
+		
+		//console.log('SUCCESS');
+		db.users.findOne({"_id": req.body.email},{ _id: 1, email: 1 }, function(err, doc) {
+			if (doc){
+				res.render('createHead', {
+					title: 'CREATE HEAD OF A DEPARTMENT',
+					errors: 'User Already Exists!!!'
+				});
+			}else{
+				var newUser = {
+					_id: req.body.email,
+					firstName: req.body.firstName,
+					lastName: req.body.lastName,
+					email: req.body.email,
+					password: req.body.password,
+					admin: 2,
+					department: req.body.department
+				}
+				db.users.insert(newUser, function(err, result){
+				if(err){
+					console.log(err);
+				}
+				res.redirect('/issues');
+				})
+			}
+		})
 	}	
 });
 
@@ -193,11 +303,7 @@ app.post('/signIn', function(req, res){
 	}else {
 		db.users.findOne({"_id": req.body.email},{ _id: 1, email: 1, password: 1, department: 1, admin: 1 }, function(err, doc) {
     	if (err){
-    		//console.log(err);
-    		res.render('signUp', {
-					title: 'Sign Up',
-					errors: err
-			});
+    		console.log(err);
     	}else{ 
     		//console.log(doc.admin);
     		req.session.user = doc;
@@ -268,6 +374,19 @@ app.post('/issues', function(req, res){
 	}	
 });
 
+app.post('/assignIssues', function(req, res){
+	req.checkBody('assignee', 'Description is Required').notEmpty();
+
+	db2.issues.update({_id: ObjectId(req.body.assignId)}, {$set:{assign: req.body.assignee, status: 'In-Progress'}}, function(err, result){
+		if(err){
+			console.log(err);
+		}
+		console.log('ok');
+		//req.session.destroy(req.session.assignId);
+		res.redirect('/deptIssues');
+	});
+});
+
 app.post('/update/:id',function(req, res){
 	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'Closed'}}, function(err, result){
 		if(err){
@@ -279,13 +398,18 @@ app.post('/update/:id',function(req, res){
 });
 
 app.post('/update2/:id',function(req, res){
-	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'Pending'}}, function(err, result){
+	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'IClosed'}}, function(err, result){
 		if(err){
 			//console.log(err);
 		}
 		//console.log('ok');
 		res.redirect('/allIssues');
 	});
+});
+
+app.post('/assign/:id',function(req, res){
+	req.session.assignId = req.params.id;
+	res.redirect('/assignIssues');
 });
 
 var port = process.env.PORT || 8000;

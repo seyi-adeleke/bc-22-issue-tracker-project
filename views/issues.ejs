@@ -1,70 +1,76 @@
 <% if (user == ''){ %>
 	<% include partials/header %>
-	<div id="case2">
+	<div id="case">
 		<h1>You are not logged in!!! </h1>
 	</div>
 <% }else{ %>
 <% include partials/header2 %>
 	<div id="case">
 		
-			<h1> <%= title %></h1>
-			
-			<% if ((errors) && (typeof(errors) === "object")){ %>
-				<ul>
-					<% errors.forEach(function(error){ %>
-						<li><%= error.msg %></li>
-					<% }) %>
-				</ul>
-			<% } %>
-			<% if ((errors) && (typeof(errors) === "string")){ %>
-				<ul>
-					<li><%= errors %></li>
-				</ul>
-			<% } %>
-			<form method="post" action="/issues">
-			   <div class="form-group">
-				  <label for="description">Issue Description:</label>
-				  <textarea class="form-control" rows="5" name="description"></textarea>
-				</div> 
-			  <div class="form-group">
-			    <label for="priority">Priority:</label>
-			    <select id ="priority" name="priority" class="form-control">
-		        	<option value="">Priority</option>
-		            <option value = 'high'>High</option>
-		        	<option value = 'medium'>Medium</option>
-		        	<option value = 'low'>Low</option>
-		        </select><br>
-			  </div>
-			  <div class="form-group">
-			    <label for="department">Department:</label>
-			    <select id ="department" name="department" class="form-control">
-		        	<option value="">Department</option>
-		            <option value = 'operations'>Operations</option>
-		        	<option value = 'finance'>Finance</option>
-		        	<option value = 'training'>Training</option>
-		        	<option value = 'recruitment'>Recruitment</option>
-		        	<option value = 'success'>Success</option>
-		        	<option value = 'sales'>Sales</option>
-		        	<option value = 'marketing'>Marketing</option>
-		        </select><br>
-			  </div>
-			  <div class="checkbox">
-			    <label><input type="checkbox"> Remember me</label>
-			  </div>
-			  <input type="hidden" value="<%= user %>" name="user">
-			  <input type="hidden" value="<%= admin %>" name="admin">
-			  <button type="submit" class="btn btn-primary">Submit</button>
-			</form> 
-			<br><br>
+		<h1> <%= title %></h1>
+		
+		<% if ((errors) && (typeof(errors) === "object")){ %>
+			<ul>
+				<% errors.forEach(function(error){ %>
+					<li><%= error.msg %></li>
+				<% }) %>
+			</ul>
+		<% } %>
+		<% if ((errors) && (typeof(errors) === "string")){ %>
+			<ul>
+				<li><%= errors %></li>
+			</ul>
+		<% } %>
+		<form method="post" action="/issues">
+		   <div class="form-group">
+			  <label for="description">Issue Description:</label>
+			  <textarea class="form-control" rows="5" name="description"></textarea>
+			</div> 
+		  <div class="form-group">
+		    <label for="priority">Priority:</label>
+		    <select id ="priority" name="priority" class="form-control">
+	        	<option value="">Priority</option>
+	            <option value = 'high'>High</option>
+	        	<option value = 'medium'>Medium</option>
+	        	<option value = 'low'>Low</option>
+	        </select><br>
+		  </div>
+		  <div class="form-group">
+		    <label for="department">Department:</label>
+		    <select id ="department" name="department" class="form-control">
+	        	<option value="">Department</option>
+	            <option value = 'operations'>Operations</option>
+	        	<option value = 'finance'>Finance</option>
+	        	<option value = 'training'>Training</option>
+	        	<option value = 'recruitment'>Recruitment</option>
+	        	<option value = 'success'>Success</option>
+	        	<option value = 'sales'>Sales</option>
+	        	<option value = 'marketing'>Marketing</option>
+	        </select><br>
+		  </div>
+		  <div class="checkbox">
+		    <label><input type="checkbox"> Remember me</label>
+		  </div>
+		  <input type="hidden" value="<%= user %>" name="user">
+		  <input type="hidden" value="<%= admin %>" name="admin">
+		  <button type="submit" class="btn btn-primary">Submit</button>
+		</form> 	
 
-			<center><h2><a href="/myIssues"> Manage Your Raised Issues </a></h2></center>
-	</div>
+		<center><button type="button" class="btn btn-default"><h2><a href="/myIssues"> Manage Your Raised Issues </a></h2></button></center>
+		<% if (admin != 1){ %>
+			<center><button type="button" class="btn btn-default"><h2><a href="/myAssignedIssues">Manage Issues Assigned To you</a></h2></button></center>
+		<br>
+		<% } %>
+	
 		<% if (admin == 1){ %>			
-			<center><h2><a href="/allIssues"> View All Raised Issues </a></h2></center>		
+			<center><button type="button" class="btn btn-default"><h2><a href="/allIssues"> View All Raised Issues </a></h2></button></center>
+			<center><button type="button" class="btn btn-default"><h2><a href="/createHead"> Create Head of a department </a></h2></button></center>		
 		<% } %>
 		<% if (admin == 2){ %>			
-			<center><h2><a href="/deptIssues"> View Raised Issues Directed To Your Department</a></h2></center>		
+			<center><button type="button" class="btn btn-default"><h2><a href="/deptIssues"> View Issues Directed To Your Department</a></h2></button></center>		
 		<% } %>
+	</div>
 
-	<% } %>
+<% } %>
+	
 <% include partials/footer %>

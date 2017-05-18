@@ -1,0 +1,54 @@
+<% include partials/header2 %>
+	<div id="case">
+		<h1> <%= title %></h1>
+		<% if ((errors) && (typeof(errors) === "object")){ %>
+			<ul>
+				<% errors.forEach(function(error){ %>
+					<li><%= error.msg %></li>
+				<% }) %>
+			</ul>
+		<% } %>
+		<% if ((errors) && (typeof(errors) === "string")){ %>
+			<ul>
+				<li><%= errors %></li>
+			</ul>
+		<% } %>
+
+		<form method="post" action="/createHead">
+		  <div class="form-group">
+		    <label for="firstName">First Name:</label>
+		    <input type="text" class="form-control" name="firstName">
+		  </div>
+		  <div class="form-group">
+		    <label for="lastName">Last Name:</label>
+		    <input type="text" class="form-control" name="lastName">
+		  </div>
+		  <div class="form-group">
+		    <label for="email">Email address:</label>
+		    <input type="email" class="form-control" name="email">
+		  </div>
+		  <div class="form-group">
+		    <label for="department">Department:</label>
+		    <select id ="department" name="department" class="form-control">
+	        	<option value="">Department</option>
+	            <option value = 'operations'>Operations</option>
+	        	<option value = 'finance'>Finance</option>
+	        	<option value = 'training'>Training</option>
+	        	<option value = 'recruitment'>Recruitment</option>
+	        	<option value = 'success'>Success</option>
+	        	<option value = 'sales'>Sales</option>
+	        	<option value = 'marketing'>Marketing</option>
+	        </select>
+		  </div>
+		  <div class="form-group">
+		    <label for="password">Password:</label>
+		    <input type="password" class="form-control" name="password">
+		  </div>
+		  <div class="form-group">
+		    <label for="password2">Retype Password:</label>
+		    <input type="password" class="form-control" name="password2">
+		  </div>
+		  <button type="submit" class="btn btn-primary">Submit</button>
+		</form> 
+	</div>
+<% include partials/footer %>
