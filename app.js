@@ -6,10 +6,10 @@ var mongojs = require('mongojs');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
-//var db = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['users']);
-//var db2 = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['issues']);
-var db = mongojs('issuesTracker', ['users']);
-var db2 = mongojs('issuesTracker', ['issues']);
+var db = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['users']);
+var db2 = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['issues']);
+//var db = mongojs('issuesTracker', ['users']);
+//var db2 = mongojs('issuesTracker', ['issues']);
 var ObjectId = mongojs.ObjectId;
 
 var app = express();
