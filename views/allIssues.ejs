@@ -8,6 +8,7 @@
 					<td>PRIORITY</td>
 					<td>DEPARTMENT</td>
 					<td>STATUS</td>
+					<td>ASSIGNED TO</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -17,6 +18,7 @@
 					<td> <%= issue.priority %> </td>
 					<td> <%= issue.department %> </td>
 					<td> <%= issue.status %>  </td>
+					<td> <%= issue.assign %>  </td>
 					<% if (issue.status == 'Closed') { %>
 						<td> <button type="button" class="btn btn-default" disabled>Resolved</button></td>
 					<% }else if (issue.status == 'Pending'){ %>
