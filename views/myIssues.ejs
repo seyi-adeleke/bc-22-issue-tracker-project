@@ -1,0 +1,26 @@
+<% include partials/header2 %>
+	<div id="case3">
+		<h1> <%= title %></h1>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<td>DESCRIPTION</td>
+					<td>PRIORITY</td>
+					<td>DEPARTMENT</td>
+					<td>STATUS</td>
+				</tr>
+			</thead>
+			<tbody>
+			<% issues.forEach(function(issue){ %>
+				<tr>
+					<td> <%= issue.description %> </td>
+					<td> <%= issue.priority %> </td>
+					<td> <%= issue.department %> </td>
+					<td> <%= issue.status %>  </td>
+				</tr>
+			<tbody>					
+			<% }) %>
+		</table>
+		
+	</div>
+<% include partials/footer %>

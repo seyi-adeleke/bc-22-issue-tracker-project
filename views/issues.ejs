@@ -55,12 +55,15 @@
 			  <input type="hidden" value="<%= admin %>" name="admin">
 			  <button type="submit" class="btn btn-primary">Submit</button>
 			</form> 
-		</div>
+			<br><br>
+
+			<center><h2><a href="/myIssues"> Manage Your Raised Issues </a></h2></center>
+	</div>
 		<% if (admin == 1){ %>			
-			<center><h2><a href="/allIssues"> View Issues </a></h2></center>		
+			<center><h2><a href="/allIssues"> View All Raised Issues </a></h2></center>		
 		<% } %>
 		<% if (admin == 2){ %>			
-			<center><h2><a href="/deptIssues"> View Issues Pertaining to Your Department</a></h2></center>		
+			<center><h2><a href="/deptIssues"> View Raised Issues Directed To Your Department</a></h2></center>		
 		<% } %>
 
 	<% } %>

@@ -17,21 +17,59 @@ function updateIssue(){
 	}
 }
 
-/*$(document).ready(function(){
-	$('.user').on('click', user);
+$(document).ready(function(){
+	$('.updateIssue2').on('click', updateIssue2);
 });
 
-function user(){
-	//var confirmation = confirm('Are You sure you want to close the Issue?');
-	//if (confirmation){
+function updateIssue2(){
+	var confirmation = confirm('Are You sure you want to close the Issue?');
+	if (confirmation){
 		$.ajax({
 			type: 'POST',
-			url: '/user/'+$(this).data('id')
+			url: '/update/'+$(this).data('id')
+		}).done(function(response){
+			window.location.replace('/deptIssues');
+		});
+		window.location.replace('/deptIssues');
+	} else {
+		return false;
+	}
+}
+
+$(document).ready(function(){
+	$('.pending').on('click', pending);
+});
+
+function pending(){
+	var confirmation = confirm('Are You sure the issue is pending?');
+	if (confirmation){
+		$.ajax({
+			type: 'POST',
+			url: '/update2/'+$(this).data('id')
 		}).done(function(response){
 			window.location.replace('/allIssues');
 		});
 		window.location.replace('/allIssues');
-	//} else {
+	} else {
 		return false;
-	//}
-}*/
+	}
+}
+
+$(document).ready(function(){
+	$('.pending2').on('click', pending2);
+});
+
+function pending2(){
+	var confirmation = confirm('Are You sure the issue is pending?');
+	if (confirmation){
+		$.ajax({
+			type: 'POST',
+			url: '/update2/'+$(this).data('id')
+		}).done(function(response){
+			window.location.replace('/deptIssues');
+		});
+		window.location.replace('/deptIssues');
+	} else {
+		return false;
+	}
+}

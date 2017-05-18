@@ -18,14 +18,14 @@
 					<td> <%= issue.department %> </td>
 					<td> <%= issue.status %>  </td>
 					<% if (issue.status == 'Closed') { %>
-						<td> <button type="button" class="btn btn-default" disabled>Close</button></td>
+						<td> <button type="button" class="btn btn-default" disabled>Close Issue</button></td>
 						<td> <button type="button" class="btn btn-default" disabled>Pending</button></td>
-					<% }else if (issue.status == 'Pending'){ %>
-						<td> <button type="button" class="btn btn-default"><a href="#" class="updateIssue" data-id="<%= issue._id %>">Close</a></button> </td>
+					<% }else if (issue.status == 'Pending') { %>
+						<td> <button type="button" class="btn btn-default"><a href="#" class="updateIssue2" data-id="<%= issue._id %>">Close Issue</a></button> </td>
 						<td> <button type="button" class="btn btn-default" disabled>Pending</button></td>
 					<% }else { %>
-						<td> <button type="button" class="btn btn-default"><a href="#" class="updateIssue" data-id="<%= issue._id %>">Close</a></button> </td>
-						<td> <button type="button" class="btn btn-default"><a href="#" class="pending" data-id="<%= issue._id %>">Pending</a></button> </td>
+						<td> <button type="button" class="btn btn-default"><a href="#" class="updateIssue2" data-id="<%= issue._id %>">Close Issue</a></button> </td>
+						<td> <button type="button" class="btn btn-default"><a href="#" class="pending2" data-id="<%= issue._id %>">Pending </a></button> </td>
 					<% } %>
 				</tr>
 			<tbody>					

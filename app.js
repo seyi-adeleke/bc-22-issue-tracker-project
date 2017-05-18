@@ -3,13 +3,23 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var expressValidator = require('express-validator');
 var mongojs = require('mongojs');
-var db = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['users']);
-var db2 = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['issues']);
-//var db = mongojs('issuesTracker', ['users']);
-//var db2 = mongojs('issuesTracker', ['issues']);
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+
+//var db = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['users']);
+//var db2 = mongojs('mongodb://Tawakalt:Tawakalt4@ds143231.mlab.com:43231/issuestracker', ['issues']);
+var db = mongojs('issuesTracker', ['users']);
+var db2 = mongojs('issuesTracker', ['issues']);
 var ObjectId = mongojs.ObjectId;
 
 var app = express();
+
+app.use(cookieParser());
+app.use(session({secret: "Shh, its a secret!"}));
+
+
+
+
 
 /*var logger = function(req, res, next){
 	console.log('Logging...');
@@ -55,19 +65,14 @@ app.use(expressValidator({
 }));
 
 app.get('/', function(req, res){
-	// find everything
-	db.users.find(function (err, docs) {
-		// docs is an array of all the documents in mycollection
-		//console.log(docs);
-		res.render('index', {
-			title: 'Issues Tracker',
-			users: docs
-		});
-	})
+	
+	res.render('signUp', {
+		title: 'SIGN UP NOW'
+	});
 });
 app.get('/signUp', function(req, res){
 		res.render('signUp', {
-			title: 'Sign Up'
+			title: 'SIGN UP'
 		});
 });
 app.get('/signIn', function(req, res){
@@ -75,46 +80,68 @@ app.get('/signIn', function(req, res){
 			title: 'Sign In'
 		});
 });
+app.get('/logout', function(req, res){
+		req.session.destroy();
+		res.redirect('/signIn')
+});
 app.get('/issues', function(req, res){
+	if (req.session.user){
 		res.render('issues', {
-			title: 'Raise Issue',
-			user: '',
-			admin: ''
+			title: 'RAISE ISSUE',
+			user: req.session.user._id,
+			admin: req.session.user.admin
 		});
+	}else{
+		res.redirect('/signIn')
+	}
+
 });
-app.get('/admin', function(req, res){
-		res.render('admin', {
-			title: 'Admin Page',
-			user: ''
-		});
-});
-app.get('/head', function(req, res){
-		res.render('head', {
-			title: 'Head Of Department Page'
-		});
+app.get('/deptIssues', function(req, res){
+	if (req.session.user){
+		if (req.session.user.admin == 2){
+			//console.log(req.session.user.department);
+			db2.issues.find({department: req.session.user.department},function (err, docs) {
+			res.render('deptIssues', {
+				title: 'ALL ISSUES DIRECTED TO YOUR DEPARTMENT',
+				issues: docs
+			});
+			})
+		}else{
+			res.redirect('/issues')	
+		}
+	}else{
+		res.redirect('/signIn')
+	}
 });
 
 app.get('/allIssues', function(req, res){
-		db2.issues.find(function (err, docs) {
-		// docs is an array of all the documents in mycollection
-		//console.log(docs);
-		res.render('allIssues', {
-			title: 'View Issues Pertaining to Your Department',
-			issues: docs
-		});
-	})
+	if (req.session.user){
+		if (req.session.user.admin === 1){
+			db2.issues.find(function (err, docs) {
+			res.render('allIssues', {
+				title: 'ALL RAISED ISSUES ON THE APP',
+				issues: docs
+			});
+			})
+		}else{
+			res.redirect('/issues')	
+		}
+	}else{
+		res.redirect('/signIn')
+	}
 });
 
-app.get('/deptIssues', function(req, res){
-		//db2.issues.find( { _id: 5 } )
-		db2.issues.find(function (err, docs) {
-		// docs is an array of all the documents in mycollection
-		//console.log(docs);
-		res.render('deptIssues', {
-			title: 'View All Issues',
+app.get('/myIssues', function(req, res){
+	if (req.session.user){		
+		db2.issues.find({user: req.session.user._id},function (err, docs) {
+		res.render('myIssues', {
+			title: 'MANAGE YOUR ISSUES',
 			issues: docs
 		});
-	})
+		})
+	}else{
+		res.redirect('/signIn')
+	}
 });
 	
 app.post('/signUp', function(req, res){
@@ -164,7 +191,7 @@ app.post('/signIn', function(req, res){
 			errors: errors
 		});
 	}else {
-		db.users.findOne({"_id": req.body.email},{ _id: 1, email: 1, password: 1, admin: 1 }, function(err, doc) {
+		db.users.findOne({"_id": req.body.email},{ _id: 1, email: 1, password: 1, department: 1, admin: 1 }, function(err, doc) {
     	if (err){
     		//console.log(err);
     		res.render('signUp', {
@@ -173,20 +200,20 @@ app.post('/signIn', function(req, res){
 			});
     	}else{ 
     		//console.log(doc.admin);
+    		req.session.user = doc;
+    		//req.session.save();
     		if (doc == null){
     			res.render('signUp', {
 					title: 'Sign Up',
 					errors: 'You have to sign up first!!!'
 				});
 			}else {
+
+				//console.log(req.session);
 				if(req.body.password == doc.password){
-					//console.log(req.body.password);
+					//console.log(req.session.user);
 					
-		    			res.render('issues', {
-						title: 'Raise Issues',
-						user: doc._id,
-						admin: doc.admin
-					});
+		    			res.redirect('/issues');
 	    		}else{
 		    		res.render('signIn', {
 						title: 'Sign In',
@@ -205,6 +232,8 @@ app.post('/issues', function(req, res){
 	req.checkBody('department', 'Department is Required').notEmpty();
 	req.checkBody('user', 'Yor are not logged in').notEmpty();
 
+	docs = db2.issues.find( { user: req.body.user } );
+	//console.log(docs);
 	var errors = req.validationErrors();
 	if(errors){		
 		res.render('issues', {
@@ -242,23 +271,22 @@ app.post('/issues', function(req, res){
 app.post('/update/:id',function(req, res){
 	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'Closed'}}, function(err, result){
 		if(err){
-			console.log(err);
+			//console.log(err);
 		}
 		//console.log('ok');
 		res.redirect('/allIssues');
 	});
 });
 
-/*app.post('/user/:id',function(req, res){
-	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'Closed'}}, function(err, result){
+app.post('/update2/:id',function(req, res){
+	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'Pending'}}, function(err, result){
 		if(err){
-			console.log(err);
+			//console.log(err);
 		}
-		console.log('ok');
+		//console.log('ok');
 		res.redirect('/allIssues');
 	});
-});*/
-
+});
 
 var port = process.env.PORT || 8000;
 //
