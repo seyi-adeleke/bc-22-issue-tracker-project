@@ -7,8 +7,8 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 require('dotenv').config();
 
-var db = mongojs(process.env.database, [process.env.collection1]);
-var db2 = mongojs(process.env.database, [process.env.collection2]);
+var db = mongojs(process.env.database || process.env.database2, [process.env.collection1]);
+var db2 = mongojs(process.env.database || process.env.database2, [process.env.collection2]);
 //var db = mongojs(process.env.database, [process.env.collection1]);
 //var db2 = mongojs(process.env.database, [process.env.collection2]);
 var ObjectId = mongojs.ObjectId;
@@ -81,7 +81,7 @@ app.get('/createHead', function(req, res){
 	if (req.session.user){
 		if (req.session.user.admin === 1){
 			db2.issues.find(function (err, docs) {
-			res.render('createhead', {
+			res.render('createHead', {
 				title: 'CREATE THE HEAD OF A DEPARTMENT',
 				issues: docs
 			});
