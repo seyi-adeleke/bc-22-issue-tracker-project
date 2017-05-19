@@ -1,6 +1,9 @@
 <% include partials/header2 %>
 	<div id="case">
 		<h1> <%= title %></h1>
+		<% if(Object.keys(issues).length === 0) { %>
+			<br><br><br><br><br><br><br><br><h2> YOU HAVE NOT BEEN ASSIGNED ANY ISSUE </h2>
+		<% } else { %>
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -23,6 +26,6 @@
 			<tbody>					
 			<% }) %>
 		</table>
-		
+	<% } %>	
 	</div>
 <% include partials/footer %>
