@@ -7,10 +7,9 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 require('dotenv').config();
 
-var db = mongojs(process.env.database || process.env.database2, [process.env.collection1]);
-var db2 = mongojs(process.env.database || process.env.database2, [process.env.collection2]);
-//var db = mongojs(process.env.database, [process.env.collection1]);
-//var db2 = mongojs(process.env.database, [process.env.collection2]);
+var db = mongojs(process.env.database);
+var db2 = mongojs(process.env.database2);
+
 var ObjectId = mongojs.ObjectId;
 
 var app = express();
@@ -20,14 +19,6 @@ app.use(session({secret: process.env.secretKey}));
 
 
 
-
-
-/*var logger = function(req, res, next){
-	console.log('Logging...');
-	next();
-}
-
-app.use(logger);*/
 
 // View Engine
 app.set('view engine', 'ejs');
@@ -66,7 +57,6 @@ app.use(expressValidator({
 }));
 
 app.get('/', function(req, res){
-	
 	res.render('signUp', {
 		title: 'SIGN UP NOW'
 	});
@@ -144,7 +134,6 @@ app.get('/assignIssues', function(req, res){
 app.get('/deptIssues', function(req, res){
 	if (req.session.user){
 		if (req.session.user.admin == 2){
-			//console.log(req.session.user.department);
 			db2.issues.find({department: req.session.user.department},function (err, docs) {
 			res.render('deptIssues', {
 				title: 'ALL ISSUES DIRECTED TO YOUR DEPARTMENT',
@@ -201,7 +190,7 @@ app.get('/myAssignedIssues', function(req, res){
 		res.redirect('/signIn')
 	}
 });
-	
+
 app.post('/signUp', function(req, res){
 	req.checkBody('firstName', 'First name is Required').notEmpty();
 	req.checkBody('lastName', 'Last name is Required').notEmpty();
@@ -216,9 +205,7 @@ app.post('/signUp', function(req, res){
 			title: 'Sign Up',
 			errors: errors
 		});
-	}else {
-		
-		//console.log('SUCCESS');
+	} else {
 		db.users.findOne({"_id": req.body.email},{ _id: 1, email: 1 }, function(err, doc) {
 			if (doc){
 				res.render('signUp', {
@@ -261,8 +248,6 @@ app.post('/createHead', function(req, res){
 			errors: errors
 		});
 	}else {
-		
-		//console.log('SUCCESS');
 		db.users.findOne({"_id": req.body.email},{ _id: 1, email: 1 }, function(err, doc) {
 			if (doc){
 				res.render('createHead', {
@@ -369,7 +354,6 @@ app.post('/issues', function(req, res){
 					user: req.body.user,
 					admin: req.body.admin
 				});
-			//res.redirect('/issues');
 		});
 	}	
 });
@@ -382,17 +366,12 @@ app.post('/assignIssues', function(req, res){
 			console.log(err);
 		}
 		console.log('ok');
-		//req.session.destroy(req.session.assignId);
 		res.redirect('/deptIssues');
 	});
 });
 
 app.post('/update/:id',function(req, res){
 	db2.issues.update({_id: ObjectId(req.params.id)}, {$set:{status: 'Closed'}}, function(err, result){
-		if(err){
-			//console.log(err);
-		}
-		//console.log('ok');
 		res.redirect('/allIssues');
 	});
 });
@@ -413,7 +392,7 @@ app.post('/assign/:id',function(req, res){
 });
 
 var port = process.env.PORT || 8000;
-//
+
 app.listen(port, function(){
 	console.log('server Started on Port '+port);
 })
